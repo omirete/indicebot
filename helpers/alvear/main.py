@@ -1,4 +1,5 @@
 import json
+from typing import Union
 from requests import get
 
 
@@ -6,15 +7,15 @@ from .rubros import rubros
 from ..utils import verificar_o_crear_carpetas, utc_timestamp, random_wait
 
 
-def guardar_datos(rubro: str, data):
+def guardar_datos(data, carpeta: str):
     """
     Guarda los datos indicados en las carpetas y archivos correspondientes.
     """
-    with open(f'./historial/alvear/{rubro}/{utc_timestamp()}.json', 'w', encoding='utf-8') as f:
+    with open(f'{carpeta}/{utc_timestamp()}.json', 'w', encoding='utf-8') as f:
         json.dump(data, f, ensure_ascii=False)
 
 
-def registrar_datos_alvear_por_rubro(rubro: str):
+def registrar_datos_alvear_por_rubro(rubro: str, carpeta: str):
     if rubro in [None, ""]:
         raise TypeError("Tenés que indicar el rubro.")
 
@@ -31,19 +32,21 @@ def registrar_datos_alvear_por_rubro(rubro: str):
         "vistaFavoritos": False
     }
 
-    verificar_o_crear_carpetas(f'./historial/alvear/{rubro}')
+    carpeta_base = carpeta or './historial'
+    folder_path = f'{carpeta_base}/alvear/{rubro}'
+    verificar_o_crear_carpetas(folder_path)
 
     response = get(base_endpoint, params, timeout=10)
     if response.status_code != 200:
         response.raise_for_status()
     else:
-        guardar_datos(rubro, response.json())
+        guardar_datos(response.json(), folder_path)
 
 
-def registrar_datos_alvear():
+def registrar_datos_alvear(carpeta: Union[str, None] = None):
     for rubro in rubros:
         print(f'Registrando datos del Alvear. Rubro: {rubro}')
-        registrar_datos_alvear_por_rubro(rubro)
+        registrar_datos_alvear_por_rubro(rubro, carpeta)
         # Para ser buenos ciudadanos (y para que no nos bloqueen la IP 😅),
         # vamos a esperar aleatoriamente entre 5 y 8 segundos después de cada
         # consulta (valores arbitrarios). Con esto intentamos evitar
