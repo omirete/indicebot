@@ -1,6 +1,6 @@
 # Índice bot
 
-> Think big, start small. Así que, por ahora, solamente recopila los precios diarios de un supermercado. Así que, por ahora, bien podría llamarse "índice alvear" 😅.
+> _Think big, start small_. Así que, por ahora, solamente recopila los precios diarios de un supermercado. Eso significa que bien podría llamarse "índice alvear" por el momento 😅.
 
 Se registran los siguientes rubros o categorías:
 
